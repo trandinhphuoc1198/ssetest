@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <body>
+        <img id="2">
+        <h3 id="3"></h3>
+        <h4 name="step1">Your name</h4>
+      
+        <input name="step1" type="text">
+      
+        <button id="1" name="step1">Next step!</button>
+        <script>
+          document.getElementById("1").onclick = async ()=> {
+              let response = await fetch('https://192.168.1.2/step1')
+              let img = await response.blob();
+              var imageUrl = URL.createObjectURL(img);
+              document.getElementById("2").src= imageUrl 
+              document.getElementById("3").innerHTML="or you can access to this url https://192.168.1.2/step2?id=yourkaiinID";
+              document.getElementsByName("step1").forEach((e)=>{e.remove()})
+              check()
+          }
+          function check() {
+              const evtSource = new EventSource("https://192.168.1.2/check", { withCredentials: false } ); 
+              evtSource.addEventListener("check-image",function(e) {
+                  console.log(e.data);
+                  response = JSON.parse(e.data)
+                  if (response['result']){
+                      console.log('ok');
+                      window.location.replace("https://192.168.1.2/step3");
+                  } else{
+                      console.log('ng');
+                      document.write('<h1>TIME OUT!!!</h1>')
+                  }
+                  evtSource.close()
+              });
+          }
+        </script>
+      </body>
+</body>
+</html>
