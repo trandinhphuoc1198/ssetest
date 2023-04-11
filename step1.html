@@ -16,23 +16,27 @@
       
         <button id="1" name="step1">Next step!</button>
         <script>
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const id = urlParams.get('id');
           document.getElementById("1").onclick = async ()=> {
-              let response = await fetch('https://192.168.1.2/step1')
+              
+              let response = await fetch('https://192.168.88.49/sse/step1?id='+id)
               let img = await response.blob();
               var imageUrl = URL.createObjectURL(img);
               document.getElementById("2").src= imageUrl 
-              document.getElementById("3").innerHTML="or you can access to this url https://192.168.1.2/step2?id=yourkaiinID";
+              document.getElementById("3").innerHTML="or you can access to this url https://192.168.88.49/sse/step2?id="+id;
               document.getElementsByName("step1").forEach((e)=>{e.remove()})
               check()
           }
           function check() {
-              const evtSource = new EventSource("https://192.168.1.2/check", { withCredentials: false } ); 
+              const evtSource = new EventSource("https://192.168.88.49/check?id="+id, { withCredentials: false } ); 
               evtSource.addEventListener("check-image",function(e) {
                   console.log(e.data);
                   response = JSON.parse(e.data)
                   if (response['result']){
                       console.log('ok');
-                      window.location.replace("https://192.168.1.2/step3");
+                      window.location.replace("https://192.168.88.49/sse/step3?id="+id);
                   } else{
                       console.log('ng');
                       document.write('<h1>TIME OUT!!!</h1>')

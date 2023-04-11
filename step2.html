@@ -220,6 +220,9 @@
   </div>
   <button id="upload">Upload</button>
 <script>
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get('id');
     document.getElementById("clearbutton").onclick=()=>{
       console.log('a');
       canvas = document.getElementById("canvas");
@@ -233,9 +236,9 @@
                 photo = document.getElementById('photo')
                 const formdata = new FormData();
                 formdata.append("img",dataURItoBlob(photo.src))
-                response = await fetch("https://192.168.1.2/step2",{body: formdata,method: "post"});
+                response = await fetch("https://192.168.88.49/sse/step2?id="+id,{body: formdata,method: "post"});
                 if (response.ok){
-                  window.location.href = "https://192.168.1.2/step3"
+                  window.location.href = "https://192.168.88.49/sse/step3?id="+id
                 } else {
                   alert('upload fail' + response.data)
                 }
